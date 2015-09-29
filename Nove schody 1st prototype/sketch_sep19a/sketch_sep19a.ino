@@ -91,6 +91,11 @@ void loop() {
       }
     }
   }
+  else {//if is bright enviroment
+    if (led2.is_fading() == false && led2.get_value() == 255) {
+      led2.fade(0, FADE_IN_DURATION);
+    }
+  }
   
   led1.update();
   led2.update();
