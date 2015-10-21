@@ -3,8 +3,9 @@
 
 // constants won't change. They're used here to
 // set pin numbers:
-const int buttonPin1 = 2;
-const int buttonPin2 = 3;
+const int buttonPin1 = 3;
+const int buttonPin2 = 4;
+const int buttonPin3 = 5;
 
 const int LDR1 = 1;
 const int LDR2 = 2;
@@ -15,8 +16,8 @@ const int FADE_IN_DURATION = 500;
 const int FADE_OUT_DURATION = 5000;
 
 Timer timer;
-LEDFader led1 = LEDFader(10);
-LEDFader led2 = LEDFader(11);
+LEDFader led1 = LEDFader(6);
+LEDFader led2 = LEDFader(9);
 
 
 int buttonState1 = 0;
@@ -36,16 +37,16 @@ void setup() {
 
 void loop() {
   // read the state of the pushbutton value:
-  buttonState1 = digitalRead(buttonPin1);
-  buttonState2 = digitalRead(buttonPin2);
+  buttonState1 = digitalRead(buttonPin1) | digitalRead(buttonPin2);
+  buttonState2 = digitalRead(buttonPin3);
   
   // read the state of the photoresistors
   ldrState1 = analogRead(LDR1);
   ldrState2 = analogRead(LDR2);
   Serial.print("LDR1: ");
   Serial.println(ldrState1);
-  //Serial.print("LDR2: ");
-  //Serial.println(ldrState2);
+  Serial.print("LDR2: ");
+  Serial.println(ldrState2);
   
   //if is dark enviroment
   if(ldrState1 < DARKNESS_TRESHOLD) {
