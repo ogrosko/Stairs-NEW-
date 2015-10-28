@@ -2,6 +2,10 @@
 #include <Timer.h>
 #include <LEDFader.h>
 
+#define PULLUP false
+#define INVERT false
+#define DEBOUNCE_MS 20 
+
 // constants won't change. They're used here to
 // set pin numbers:
 //const int buttonPin1 = 3;
@@ -14,17 +18,19 @@ const int LDR2 = 2;
 const int DARKNESS_TRESHOLD = 600; //[0-1024]
 
 const int FADE_IN_DURATION = 850;
-const int FADE_OUT_DURATION = 4000;
+const int FADE_OUT_DURATION = 5000;
 
-Timer timer;
+Timer timer1;
+Timer timer2;
 LEDFader led1 = LEDFader(6);
 LEDFader led2 = LEDFader(9);
-Button pir1 = Button(3, PULLDOWN);
-Button pir2 = Button(4, PULLDOWN);
-Button pir3 = Button(5, PULLDOWN);
 
-int pirState1 = 0;
-int pirState2 = 0;
+Button pir1(3, PULLUP, INVERT, DEBOUNCE_MS);
+Button pir2(4, PULLUP, INVERT, DEBOUNCE_MS);
+Button pir3(5, PULLUP, INVERT, DEBOUNCE_MS);
+
+//int pirState1 = 0;
+//int pirState2 = 0;
 
 int ldrState1 = 0;
 int ldrState2 = 0;
@@ -39,9 +45,9 @@ void setup() {
 }
 
 void loop() {
-  // read the state of the pushbutton value:
-  pirState1 = pir1.uniquePress() | pir2.uniquePress();
-  pirState2 = pir3.uniquePress();
+  pir1.read();
+  pir2.read();
+  pir3.read();
   
   // read the state of the photoresistors
   ldrState1 = analogRead(LDR1);
@@ -50,17 +56,17 @@ void loop() {
   //if is dark enviroment
   if(ldrState1 < DARKNESS_TRESHOLD) {
     if  (led1.is_fading() == false) {
-      if (pirState1) {
-        if (led1OffPointer) timer.stop(led1OffPointer);
+      if (pir1.wasPressed() || pir2.wasPressed()) {
+        if (led1OffPointer) timer1.stop(led1OffPointer);
         led1.fade(255, FADE_IN_DURATION); 
       }
       
       if (led1.get_value() == 255) {
-        led1OffPointer = timer.after(2000, turnLedOff1);
+        led1OffPointer = timer1.after(15000, turnLedOff1);
       }
     }
     else {
-      if (pirState1) {
+      if (pir1.wasPressed() || pir2.wasPressed()) {
         led1.stop_fade();
         led1.fade(255, FADE_IN_DURATION); 
       }
@@ -76,16 +82,16 @@ void loop() {
   //--------------------------------------
   if(ldrState2 < DARKNESS_TRESHOLD) {
     if  (led2.is_fading() == false) {
-      if (pirState2) {
+      if (pir3.wasPressed()) {
         led2.fade(255, FADE_IN_DURATION); 
       }
       
       if (led2.get_value() == 255) {
-        led2OffPointer = timer.after(2000, turnLedOff2);
+        led2OffPointer = timer2.after(13000, turnLedOff2);
       }
     }
     else {
-      if (pirState2) {
+      if (pir2.wasPressed()) {
         led2.stop_fade();
         led2.fade(255, FADE_IN_DURATION); 
       }
@@ -99,7 +105,8 @@ void loop() {
   
   led1.update();
   led2.update();
-  timer.update();
+  timer1.update();
+  timer2.update();
 }
 
 void turnLedOff1() {
