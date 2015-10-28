@@ -6,12 +6,6 @@
 #define INVERT false
 #define DEBOUNCE_MS 20 
 
-// constants won't change. They're used here to
-// set pin numbers:
-//const int buttonPin1 = 3;
-//const int buttonPin2 = 4;
-//const int buttonPin3 = 5;
-
 const int LDR1 = 1;
 const int LDR2 = 2;
 
@@ -29,9 +23,6 @@ Button pir1(3, PULLUP, INVERT, DEBOUNCE_MS);
 Button pir2(4, PULLUP, INVERT, DEBOUNCE_MS);
 Button pir3(5, PULLUP, INVERT, DEBOUNCE_MS);
 
-//int pirState1 = 0;
-//int pirState2 = 0;
-
 int ldrState1 = 0;
 int ldrState2 = 0;
 
@@ -39,8 +30,6 @@ int led1OffPointer;
 int led2OffPointer;
 
 void setup() {
-  //pinMode(buttonPin1, INPUT);
-  //pinMode(buttonPin2, INPUT);
   //Serial.begin(9600);
 }
 
@@ -91,7 +80,7 @@ void loop() {
       }
     }
     else {
-      if (pir2.wasPressed()) {
+      if (pir3.wasPressed()) {
         led2.stop_fade();
         led2.fade(255, FADE_IN_DURATION); 
       }
