@@ -12,7 +12,7 @@ const int LDR2 = 2;
 const int DARKNESS_TRESHOLD = 600; //[0-1024]
 
 const int FADE_IN_DURATION = 850;
-const int FADE_OUT_DURATION = 5000;
+const int FADE_OUT_DURATION = 8000;
 
 Timer timer1;
 Timer timer2;
@@ -40,14 +40,16 @@ void loop() {
   
   // read the state of the photoresistors
   ldrState1 = analogRead(LDR1);
+  //Serial.println(ldrState1);
   ldrState2 = analogRead(LDR2);
+  //Serial.println(ldrState1);
   
   //if is dark enviroment
   if(ldrState1 < DARKNESS_TRESHOLD) {
     if  (led1.is_fading() == false) {
       if (pir1.wasPressed() || pir2.wasPressed()) {
         if (led1OffPointer) timer1.stop(led1OffPointer);
-        led1.fade(255, FADE_IN_DURATION); 
+        led1.fade(255, FADE_IN_DURATION);
       }
       
       if (led1.get_value() == 255) {
