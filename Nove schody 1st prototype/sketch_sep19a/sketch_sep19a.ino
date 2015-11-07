@@ -9,7 +9,10 @@
 const int LDR1 = 1;
 const int LDR2 = 2;
 
-const int DARKNESS_TRESHOLD = 600; //[0-1024]
+int DARKNESS_TRESHOLD1 = 600; //[0-1024]
+int DARKNESS_TRESHOLD1_step = 100; //[0-1024]
+int DARKNESS_TRESHOLD2 = 600; //[0-1024]
+int DARKNESS_TRESHOLD2_step = 100; //[0-1024]
 
 const int FADE_IN_DURATION = 850;
 const int FADE_OUT_DURATION = 8000;
@@ -45,11 +48,12 @@ void loop() {
   //Serial.println(ldrState1);
   
   //if is dark enviroment
-  if(ldrState1 < DARKNESS_TRESHOLD) {
+  if(ldrState1 < DARKNESS_TRESHOLD1) {
     if  (led1.is_fading() == false) {
       if (pir1.wasPressed() || pir2.wasPressed()) {
         if (led1OffPointer) timer1.stop(led1OffPointer);
         led1.fade(255, FADE_IN_DURATION);
+        DARKNESS_TRESHOLD1 = 700;
       }
       
       if (led1.get_value() == 255) {
@@ -59,22 +63,25 @@ void loop() {
     else {
       if (pir1.wasPressed() || pir2.wasPressed()) {
         led1.stop_fade();
-        led1.fade(255, FADE_IN_DURATION); 
+        led1.fade(255, FADE_IN_DURATION);
+        DARKNESS_TRESHOLD1 = 700;
       }
     }
   }
   else {//if is bright enviroment
     if (led1.is_fading() == false && led1.get_value() == 255) {
       led1.fade(0, FADE_IN_DURATION);
+      DARKNESS_TRESHOLD1 = 600;
     }
   }
   
   
   //--------------------------------------
-  if(ldrState2 < DARKNESS_TRESHOLD) {
+  if(ldrState2 < DARKNESS_TRESHOLD2) {
     if  (led2.is_fading() == false) {
       if (pir3.wasPressed()) {
-        led2.fade(255, FADE_IN_DURATION); 
+        led2.fade(255, FADE_IN_DURATION);
+        DARKNESS_TRESHOLD2 = 700;
       }
       
       if (led2.get_value() == 255) {
@@ -84,13 +91,15 @@ void loop() {
     else {
       if (pir3.wasPressed()) {
         led2.stop_fade();
-        led2.fade(255, FADE_IN_DURATION); 
+        led2.fade(255, FADE_IN_DURATION);
+        DARKNESS_TRESHOLD2 = 700;
       }
     }
   }
   else {//if is bright enviroment
     if (led2.is_fading() == false && led2.get_value() == 255) {
       led2.fade(0, FADE_IN_DURATION);
+      DARKNESS_TRESHOLD2 = 600;
     }
   }
   
@@ -102,9 +111,11 @@ void loop() {
 
 void turnLedOff1() {
   led1.fade(0, FADE_OUT_DURATION);
+  DARKNESS_TRESHOLD1 = 600;
 }
 
 void turnLedOff2() {
   led2.fade(0, FADE_OUT_DURATION);
+  DARKNESS_TRESHOLD2 = 600;
 }
 
